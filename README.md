@@ -114,10 +114,10 @@ pnpm run dev
 
 Default port: **3000**.
 
-Create `frontend/.env.local`:
+Create `frontend/.env.local` (or copy from `.env.local.example`):
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:3001
+VITE_API_URL=http://localhost:3001
 ```
 
 ### Run tests
@@ -135,7 +135,7 @@ docker-compose up
 
 Both services start. Frontend at `http://localhost:3000`, backend at `http://localhost:3001`.
 
-> **Note:** `NEXT_PUBLIC_API_URL` is set to `http://backend:3001` inside Docker. For the browser to reach the backend, traffic must be routed through your host — if you need direct browser access to the API outside Docker, set it to `http://localhost:3001` instead and rebuild.
+> **Note:** `VITE_API_URL` is set to `http://backend:3001` inside Docker. For the browser to reach the backend, traffic must be routed through your host — if you need direct browser access to the API outside Docker, set it to `http://localhost:3001` instead and rebuild.
 
 ### Deploy to Vercel
 
@@ -143,6 +143,6 @@ Both services start. Frontend at `http://localhost:3000`, backend at `http://loc
 2. Login (run yourself): `vercel login`
 3. From `frontend/`: `vercel --prod`
 4. In Vercel project settings → **Environment Variables**, add:
-   - `NEXT_PUBLIC_API_URL` = `<your-railway-backend-url>`
+   - `VITE_API_URL` = `<your-railway-backend-url>`
 5. Live URL: *(paste Vercel URL here after deploy)*
 # uitop

@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Trash2 } from 'lucide-react'
 import { Badge, Button, Checkbox } from '@/shared/ui'
 import type { Todo } from '../model/types'
+import { TodoCompleteButton } from './TodoCompleteButton'
 
 interface Props {
   todo: Todo
@@ -34,12 +35,6 @@ export const TodoItem = memo(function TodoItem({
         disabled={isDone}
         aria-label="select task"
       />
-      <Checkbox
-        checked={isDone}
-        onCheckedChange={handleComplete}
-        disabled={isDone}
-        aria-label="complete task"
-      />
       <span className={`flex-1 text-sm ${isDone ? 'text-muted-foreground line-through' : ''}`}>
         {todo.text}
       </span>
@@ -54,6 +49,7 @@ export const TodoItem = memo(function TodoItem({
       >
         <Trash2 className="h-4 w-4" />
       </Button>
+      <TodoCompleteButton completed={isDone} onComplete={handleComplete} />
     </li>
   )
 })

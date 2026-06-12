@@ -1,21 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { todoApi } from '@/entities/todo/api/todoApi'
-import { adaptTodoDto } from '@/entities/todo/services/todoService'
-import { todoKeys } from '@/entities/todo/hooks/useTodos'
-
-function getErrorMessage(err: unknown): string | null {
-  if (
-    err &&
-    typeof err === 'object' &&
-    'response' in err &&
-    (err as { response?: { status?: number } }).response?.status === 400
-  ) {
-    const resp = (err as { response?: { data?: { message?: string } } }).response
-    return resp?.data?.message ?? 'This category already has 5 tasks'
-  }
-  return 'Failed to create task'
-}
+import { todoApi, adaptTodoDto, todoKeys } from '@/entities/todo'
+import { getApiErrorMessage } from '@/shared/lib'
 
 export function useCreateTodo() {
   const queryClient = useQueryClient()
@@ -34,7 +20,7 @@ export function useCreateTodo() {
       await mutation.mutateAsync({ text, categoryId })
       return null
     } catch (err) {
-      return getErrorMessage(err)
+      return getApiErrorMessage(err, 'Failed to create task')
     }
   }
 

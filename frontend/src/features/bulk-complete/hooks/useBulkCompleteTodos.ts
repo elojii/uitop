@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { todoApi } from '@/entities/todo/api/todoApi'
-import { adaptTodoDto } from '@/entities/todo/services/todoService'
-import { todoKeys } from '@/entities/todo/hooks/useTodos'
 import {
+  todoApi,
+  adaptTodoDto,
+  todoKeys,
   patchTodosInCache,
   restoreTodos,
   snapshotTodos,
-} from '@/entities/todo/lib/todoCache'
+} from '@/entities/todo'
 
 export function useBulkCompleteTodos() {
   const queryClient = useQueryClient()

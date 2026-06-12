@@ -1,16 +1,16 @@
 import { useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { todoApi } from '@/entities/todo/api/todoApi'
-import { todoKeys } from '@/entities/todo/hooks/useTodos'
 import {
+  todoApi,
+  todoKeys,
   removeTodoFromCache,
   restoreTodos,
   snapshotTodos,
-} from '@/entities/todo/lib/todoCache'
-import { toastUndo } from '@/shared/lib/toastUndo'
+  type Todo,
+} from '@/entities/todo'
+import { toastUndo } from '@/shared/lib'
 import { useRestoreTodo } from './useRestoreTodo'
-import type { Todo } from '@/entities/todo'
 
 export function useDeleteTodo() {
   const queryClient = useQueryClient()
@@ -34,7 +34,7 @@ export function useDeleteTodo() {
   })
 
   const handleDeleteTodo = useCallback(
-    (todo: Todo) => {
+    async (todo: Todo) => {
       deleteTodoMutation.mutate(todo.id)
       toastUndo('Task deleted', () => handleRestoreTodo.mutate(todo))
     },

@@ -1,16 +1,16 @@
 import { useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { todoApi } from '@/entities/todo/api/todoApi'
-import { adaptTodoDto } from '@/entities/todo/services/todoService'
-import { todoKeys } from '@/entities/todo/hooks/useTodos'
 import {
+  todoApi,
+  adaptTodoDto,
+  todoKeys,
   patchTodoInCache,
   restoreTodos,
   snapshotTodos,
-} from '@/entities/todo/lib/todoCache'
-import { toastUndo } from '@/shared/lib/toastUndo'
-import type { Todo } from '@/entities/todo'
+  type Todo,
+} from '@/entities/todo'
+import { toastUndo } from '@/shared/lib'
 
 export function useUpdateTodo() {
   const queryClient = useQueryClient()
@@ -33,7 +33,7 @@ export function useUpdateTodo() {
     },
   })
 
-  const complete = useCallback(
+  const handleCompleteTodo = useCallback(
     (todo: Todo) => {
       setCompleted.mutate({ id: todo.id, completed: true })
       toastUndo('Task completed', () =>
@@ -43,5 +43,5 @@ export function useUpdateTodo() {
     [setCompleted],
   )
 
-  return { complete }
+  return { handleCompleteTodo }
 }

@@ -18,23 +18,29 @@ export const TodoItem = memo(function TodoItem({
   onComplete,
   onDelete,
 }: Props) {
-  const done = todo.completed
+  const isDone = todo.completed
+
+  const handleCheckedChange = () => onToggleSelect(todo.id)
+
+  const handleComplete = () => !isDone && onComplete(todo)
+
+  const handleDelete = () => onDelete(todo)
 
   return (
     <li className="flex items-center gap-3 border-b px-4 py-3 last:border-b-0 transition-colors hover:bg-muted/50">
       <Checkbox
         checked={isSelected}
-        onCheckedChange={() => onToggleSelect(todo.id)}
-        disabled={done}
+        onCheckedChange={handleCheckedChange}
+        disabled={isDone}
         aria-label="select task"
       />
       <Checkbox
-        checked={done}
-        onCheckedChange={() => !done && onComplete(todo)}
-        disabled={done}
+        checked={isDone}
+        onCheckedChange={handleComplete}
+        disabled={isDone}
         aria-label="complete task"
       />
-      <span className={`flex-1 text-sm ${done ? 'text-muted-foreground line-through' : ''}`}>
+      <span className={`flex-1 text-sm ${isDone ? 'text-muted-foreground line-through' : ''}`}>
         {todo.text}
       </span>
       <Badge variant="secondary">{todo.category.name}</Badge>
@@ -42,7 +48,7 @@ export const TodoItem = memo(function TodoItem({
         type="button"
         variant="ghost"
         size="icon"
-        onClick={() => onDelete(todo)}
+        onClick={handleDelete}
         aria-label="delete task"
         className="text-muted-foreground hover:text-destructive"
       >

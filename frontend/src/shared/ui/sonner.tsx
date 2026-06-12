@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react'
-import { useTheme } from '@/shared/hooks/useTheme'
+import { useTheme } from '../hooks/useTheme'
 import { Toaster as Sonner } from 'sonner'
 
 type ToasterProps = ComponentProps<typeof Sonner>

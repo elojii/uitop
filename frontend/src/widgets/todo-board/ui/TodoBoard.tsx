@@ -29,7 +29,7 @@ export function TodoBoard() {
   const { selected: selectedCategory, setSelected: setSelectedCategory } = useTodoFilter()
   const { data: todos, isLoading, isError, refetch } = useTodos(selectedCategory)
   const { data: categories = [] } = useCategories()
-  const { complete } = useUpdateTodo()
+  const { handleCompleteTodo } = useUpdateTodo()
   const { handleDeleteTodo } = useDeleteTodo()
   const { bulkComplete, isBulkCompleting } = useBulkCompleteTodos()
 
@@ -49,11 +49,11 @@ export function TodoBoard() {
   } = useTodoSelection(incompleteIds)
 
   const handleComplete = useCallback(
-    (todo: Parameters<typeof complete>[0]) => {
-      complete(todo)
+    (todo: Parameters<typeof handleCompleteTodo>[0]) => {
+      handleCompleteTodo(todo)
       removeIds([todo.id])
     },
-    [complete, removeIds],
+    [handleCompleteTodo, removeIds],
   )
 
   const handleDelete = useCallback(

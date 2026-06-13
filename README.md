@@ -1,6 +1,6 @@
 # Todo App — Full-Stack Monorepo
 
-A full-stack Todo app built with **NestJS** (backend) and **Next.js** (frontend), managed as a **pnpm** monorepo.
+A full-stack Todo app built with **NestJS** (backend) and **Vite + React** (frontend), managed as a **pnpm** monorepo.
 
 ---
 
@@ -17,7 +17,7 @@ cd backend && pnpm run start:dev
 cd frontend && pnpm run dev
 ```
 
-Visit `http://localhost:3000`. The backend API runs at `http://localhost:3001`.
+Visit `http://localhost:5173`. The backend API runs at `http://localhost:3001`.
 
 ---
 
@@ -27,7 +27,7 @@ Visit `http://localhost:3000`. The backend API runs at `http://localhost:3001`.
 
 - **NestJS** (TypeScript) — REST API framework
 - **TypeORM** — ORM
-- **PostgreSQL** (Neon, via `pg`) — connection string from `DATABASE_URL`
+- **PostgreSQL** (Neon via Vercel marketplace, via `pg`) — connection string from `POSTGRES_URL` / `DATABASE_URL`
 - **class-validator / class-transformer** — DTO validation
 
 ### Run locally
@@ -38,15 +38,18 @@ pnpm install
 pnpm run start:dev   # watch mode
 ```
 
-Default port: **3001**. Point `DATABASE_URL` at a Neon (or any) Postgres database.
+Default port: **3001**. Point a Neon (or any) Postgres connection string at the app via one of the accepted env vars.
 
 Copy `.env.example` to `.env` and adjust if needed:
 
 ```
 PORT=3001
-DATABASE_URL=postgres://user:password@host/db?sslmode=require
+# Vercel Neon marketplace provides these automatically when linked:
+POSTGRES_URL=postgres://user:password@host/db?sslmode=require
+# Alternatively any of these are also accepted:
+# POSTGRES_PRISMA_URL=...
+# DATABASE_URL=...
 FRONTEND_URL=http://localhost:3000
-# DB_SYNCHRONIZE=false   # disable auto schema sync once the schema is stable
 ```
 
 ### Run tests
@@ -56,7 +59,7 @@ cd backend
 pnpm run test
 ```
 
-Tests use an in-memory SQLite database and do not touch the real data file.
+Tests use an in-memory SQLite database (`better-sqlite3`) and do not touch Neon or any real Postgres instance.
 
 ### API reference
 
@@ -81,7 +84,7 @@ Default categories seeded on first run: `Work`, `Personal`, `Shopping`, `Health`
 docker-compose up backend
 ```
 
-The database lives in Neon, so no volume is needed — set `DATABASE_URL` on the container.
+The database lives in Neon, so no volume is needed — set `POSTGRES_URL` (or `DATABASE_URL`) on the container.
 
 ### Deploy to Railway
 
@@ -90,7 +93,7 @@ The database lives in Neon, so no volume is needed — set `DATABASE_URL` on the
 3. Init project: `railway init`
 4. Deploy: `cd backend && railway up`
 5. In the Railway dashboard, set env vars:
-   - `DATABASE_URL=<your-neon-pooled-connection-string>`
+   - `POSTGRES_URL=<your-neon-pooled-connection-string>` (from Vercel Neon marketplace, or use `DATABASE_URL`)
    - `FRONTEND_URL=<your-vercel-url>`
 6. Live API URL: *(paste Railway URL here after deploy)*
 
@@ -100,10 +103,14 @@ The database lives in Neon, so no volume is needed — set `DATABASE_URL` on the
 
 ### Tech stack
 
-- **Next.js 14** (App Router, TypeScript)
-- **MUI (Material UI v5)** — components & styling
+- **Vite + React 19** (TypeScript)
+- **Tailwind CSS v4** — styling
+- **Radix UI** — headless primitives (shadcn/ui pattern with CVA + clsx + tailwind-merge)
+- **TanStack Query v5** — server state / data fetching
 - **React Hook Form** — form handling
 - **Axios** — HTTP client
+- **Sonner** — toast notifications
+- **Lucide React** — icons
 
 ### Run locally
 
@@ -113,19 +120,12 @@ pnpm install
 pnpm run dev
 ```
 
-Default port: **3000**.
+Default port: **5173** (Vite default).
 
-Create `frontend/.env.local` (or copy from `.env.local.example`):
+Create `frontend/.env.local`:
 
 ```
 VITE_API_URL=http://localhost:3001
-```
-
-### Run tests
-
-```bash
-cd frontend
-pnpm run test
 ```
 
 ### Docker (full stack)
@@ -134,7 +134,7 @@ pnpm run test
 docker-compose up
 ```
 
-Both services start. Frontend at `http://localhost:3000`, backend at `http://localhost:3001`.
+Both services start. Frontend at `http://localhost:5173`, backend at `http://localhost:3001`.
 
 > **Note:** `VITE_API_URL` is set to `http://backend:3001` inside Docker. For the browser to reach the backend, traffic must be routed through your host — if you need direct browser access to the API outside Docker, set it to `http://localhost:3001` instead and rebuild.
 

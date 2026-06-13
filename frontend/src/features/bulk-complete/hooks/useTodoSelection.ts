@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
 
-export function useTodoSelection(incompleteIds: number[]) {
+export function useTodoSelection(allIds: number[]) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   const allSelected = useMemo(
-    () => incompleteIds.length > 0 && incompleteIds.every((id) => selectedIds.has(id)),
-    [incompleteIds, selectedIds],
+    () => allIds.length > 0 && allIds.every((id) => selectedIds.has(id)),
+    [allIds, selectedIds],
   )
 
   const someSelected = selectedIds.size > 0
@@ -20,8 +20,8 @@ export function useTodoSelection(incompleteIds: number[]) {
   }, [])
 
   const toggleAll = useCallback(() => {
-    setSelectedIds(allSelected ? new Set() : new Set(incompleteIds))
-  }, [allSelected, incompleteIds])
+    setSelectedIds(allSelected ? new Set() : new Set(allIds))
+  }, [allSelected, allIds])
 
   const clear = useCallback(() => {
     setSelectedIds(new Set())

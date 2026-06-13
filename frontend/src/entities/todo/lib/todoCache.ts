@@ -34,6 +34,22 @@ export function addTodoToCache(qc: QueryClient, dto: TodoDto) {
   })
 }
 
+export function removeTodosFromCache(qc: QueryClient, ids: number[]) {
+  const idSet = new Set(ids)
+  qc.setQueriesData<TodoDto[]>({ queryKey: todoKeys.all }, (old) =>
+    old?.filter((todo) => !idSet.has(todo.id)),
+  )
+}
+
+export function addTodosToCache(qc: QueryClient, dtos: TodoDto[]) {
+  qc.setQueriesData<TodoDto[]>({ queryKey: todoKeys.all }, (old) => {
+    const base = old ?? []
+    const existing = new Set(base.map((todo) => todo.id))
+    const toAdd = dtos.filter((dto) => !existing.has(dto.id))
+    return toAdd.length ? [...base, ...toAdd] : base
+  })
+}
+
 export function patchTodosInCache(qc: QueryClient, ids: number[], patch: Partial<TodoDto>) {
   const idSet = new Set(ids)
   qc.setQueriesData<TodoDto[]>({ queryKey: todoKeys.all }, (old) =>

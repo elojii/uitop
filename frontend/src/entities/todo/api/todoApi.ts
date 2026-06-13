@@ -19,6 +19,12 @@ export const todoApi = {
   delete: (id: number): Promise<void> =>
     apiClient.delete(`/todos/${id}`).then(() => undefined),
 
+  bulkDelete: (ids: number[]): Promise<void> =>
+    apiClient.delete('/todos/bulk', { data: { ids } }).then(() => undefined),
+
   restore: (id: number): Promise<TodoDto> =>
     apiClient.patch<TodoDto>(`/todos/${id}/restore`).then((r) => r.data),
+
+  bulkRestore: (ids: number[]): Promise<TodoDto[]> =>
+    apiClient.patch<TodoDto[]>('/todos/bulk-restore', { ids }).then((r) => r.data),
 }

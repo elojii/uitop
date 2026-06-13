@@ -32,7 +32,6 @@ export const TodoItem = memo(function TodoItem({
       <Checkbox
         checked={isSelected}
         onCheckedChange={handleCheckedChange}
-        disabled={isDone}
         aria-label="select task"
       />
       <span className={`flex-1 text-sm ${isDone ? 'text-muted-foreground line-through' : ''}`}>

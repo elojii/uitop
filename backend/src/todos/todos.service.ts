@@ -63,6 +63,17 @@ export class TodosService {
     await this.todoRepo.softDelete(id);
   }
 
+  async bulkRemove(ids: number[]): Promise<void> {
+    if (!ids.length) return;
+    await this.todoRepo.softDelete(ids);
+  }
+
+  async bulkRestore(ids: number[]): Promise<Todo[]> {
+    if (!ids.length) return [];
+    await this.todoRepo.restore(ids);
+    return this.todoRepo.findBy({ id: In(ids) });
+  }
+
   async restore(id: number): Promise<Todo> {
     const todo = await this.todoRepo.findOne({ where: { id }, withDeleted: true });
     if (!todo) {

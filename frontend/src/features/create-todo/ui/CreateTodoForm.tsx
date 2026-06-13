@@ -1,4 +1,5 @@
 import { useForm, Controller } from 'react-hook-form'
+import { Loader2 } from 'lucide-react'
 import { Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, FormField } from '@/shared/ui'
 import { useCreateTodo } from '../hooks/useCreateTodo'
 import type { Category } from '@/entities/category'
@@ -66,6 +67,7 @@ export function CreateTodoForm({ categories }: Props) {
         </FormField>
 
         <Button type="submit" disabled={isCreating}>
+          {isCreating && <Loader2 className="h-4 w-4 animate-spin" />}
           Add task
         </Button>
       </div>

@@ -14,7 +14,9 @@ interface Props {
   onComplete: (todo: Todo) => void
   onDelete: (todo: Todo) => void
   onBulkComplete: () => void
+  onBulkDelete: () => void
   isBulkCompleting?: boolean
+  isBulkDeleting?: boolean
 }
 
 export function TodoList({
@@ -27,7 +29,9 @@ export function TodoList({
   onComplete,
   onDelete,
   onBulkComplete,
+  onBulkDelete,
   isBulkCompleting,
+  isBulkDeleting,
 }: Props) {
   const handleComplete = useCallback((todo: Todo) => onComplete(todo), [onComplete])
   const handleDelete = useCallback((todo: Todo) => onDelete(todo), [onDelete])
@@ -45,7 +49,9 @@ export function TodoList({
         <BulkActionsBar
           count={selectedIds.size}
           onBulkComplete={onBulkComplete}
-          isLoading={isBulkCompleting}
+          onBulkDelete={onBulkDelete}
+          isCompleting={isBulkCompleting}
+          isDeleting={isBulkDeleting}
         />
       )}
       <ul>

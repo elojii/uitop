@@ -5,7 +5,7 @@ import { CreateTodoForm } from '@/features/create-todo'
 import { TodoFilter, useTodoFilter } from '@/features/filter-todos'
 import { useBulkCompleteTodos, useTodoSelection } from '@/features/bulk-complete'
 import { useUpdateTodo } from '@/features/update-todo'
-import { useDeleteTodo } from '@/features/delete-todo'
+import { useDeleteTodo, useBulkDeleteTodos } from '@/features/delete-todo'
 import { TodoBoardEmpty, TodoBoardError, TodoBoardLoading } from './TodoBoardStates'
 import { TodoList } from './TodoList'
 
@@ -22,7 +22,9 @@ interface TodoBoardContentProps {
   onComplete: (todo: Todo) => void
   onDelete: (todo: Todo) => void
   onBulkComplete: () => void
+  onBulkDelete: () => void
   isBulkCompleting: boolean
+  isBulkDeleting: boolean
 }
 
 export function TodoBoard() {
@@ -32,11 +34,9 @@ export function TodoBoard() {
   const { handleCompleteTodo } = useUpdateTodo()
   const { handleDeleteTodo } = useDeleteTodo()
   const { bulkComplete, isBulkCompleting } = useBulkCompleteTodos()
+  const { bulkDelete, isBulkDeleting } = useBulkDeleteTodos()
 
-  const incompleteIds = useMemo(
-    () => todos.filter((t: Todo) => !t.completed).map((t: Todo) => t.id),
-    [todos],
-  )
+  const allIds = useMemo(() => todos.map((t: Todo) => t.id), [todos])
 
   const {
     selectedIds,
@@ -46,14 +46,13 @@ export function TodoBoard() {
     toggleAll,
     clear,
     removeIds,
-  } = useTodoSelection(incompleteIds)
+  } = useTodoSelection(allIds)
 
   const handleComplete = useCallback(
     (todo: Parameters<typeof handleCompleteTodo>[0]) => {
       handleCompleteTodo(todo)
-      removeIds([todo.id])
     },
-    [handleCompleteTodo, removeIds],
+    [handleCompleteTodo],
   )
 
   const handleDelete = useCallback(
@@ -68,8 +67,14 @@ export function TodoBoard() {
     const ids = Array.from(selectedIds)
     if (!ids.length) return
     await bulkComplete(ids)
+  }, [selectedIds, bulkComplete])
+
+  const handleBulkDelete = useCallback(() => {
+    const selectedTodos = todos.filter((t: Todo) => selectedIds.has(t.id))
+    if (!selectedTodos.length) return
+    bulkDelete(selectedTodos)
     clear()
-  }, [selectedIds, bulkComplete, clear])
+  }, [todos, selectedIds, bulkDelete, clear])
 
   const handleRetry = useCallback(() => {
     refetch()
@@ -116,7 +121,9 @@ export function TodoBoard() {
           onComplete={handleComplete}
           onDelete={handleDelete}
           onBulkComplete={handleBulkComplete}
+          onBulkDelete={handleBulkDelete}
           isBulkCompleting={isBulkCompleting}
+          isBulkDeleting={isBulkDeleting}
         />
       </div>
     </div>
@@ -136,7 +143,9 @@ const TodoBoardContent = memo(function TodoBoardContent({
   onComplete,
   onDelete,
   onBulkComplete,
+  onBulkDelete,
   isBulkCompleting,
+  isBulkDeleting,
 }: TodoBoardContentProps) {
   if (isLoading) {
     return <TodoBoardLoading />
@@ -161,7 +170,9 @@ const TodoBoardContent = memo(function TodoBoardContent({
       onComplete={onComplete}
       onDelete={onDelete}
       onBulkComplete={onBulkComplete}
+      onBulkDelete={onBulkDelete}
       isBulkCompleting={isBulkCompleting}
+      isBulkDeleting={isBulkDeleting}
     />
   )
 })

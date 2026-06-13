@@ -8,6 +8,8 @@ export {
   patchTodoInCache,
   removeTodoFromCache,
   addTodoToCache,
+  removeTodosFromCache,
+  addTodosToCache,
   patchTodosInCache,
 } from './lib/todoCache'
 export { TodoItem } from './ui/TodoItem'

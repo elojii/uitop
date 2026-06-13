@@ -14,6 +14,7 @@ import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { BulkCompleteDto } from './dto/bulk-complete.dto';
+import { BulkIdsDto } from './dto/bulk-ids.dto';
 
 @Controller('todos')
 export class TodosController {
@@ -30,10 +31,21 @@ export class TodosController {
     return this.todosService.findAll(categoryId);
   }
 
-  // bulk-complete must be defined before :id to avoid route conflict
+  // bulk routes must be defined before :id to avoid route conflict
   @Patch('bulk-complete')
   bulkComplete(@Body() dto: BulkCompleteDto) {
     return this.todosService.bulkComplete(dto);
+  }
+
+  @Patch('bulk-restore')
+  bulkRestore(@Body() dto: BulkIdsDto) {
+    return this.todosService.bulkRestore(dto.ids);
+  }
+
+  @Delete('bulk')
+  @HttpCode(204)
+  bulkRemove(@Body() dto: BulkIdsDto) {
+    return this.todosService.bulkRemove(dto.ids);
   }
 
   @Patch(':id/restore')

@@ -27,7 +27,7 @@ Visit `http://localhost:3000`. The backend API runs at `http://localhost:3001`.
 
 - **NestJS** (TypeScript) — REST API framework
 - **TypeORM** — ORM
-- **SQLite** (`better-sqlite3`) — file-based database at `backend/data/db.sqlite`
+- **PostgreSQL** (Neon, via `pg`) — connection string from `DATABASE_URL`
 - **class-validator / class-transformer** — DTO validation
 
 ### Run locally
@@ -38,14 +38,15 @@ pnpm install
 pnpm run start:dev   # watch mode
 ```
 
-Default port: **3001**. SQLite file: `backend/data/db.sqlite`.
+Default port: **3001**. Point `DATABASE_URL` at a Neon (or any) Postgres database.
 
 Copy `.env.example` to `.env` and adjust if needed:
 
 ```
 PORT=3001
-DATABASE_PATH=./data/db.sqlite
+DATABASE_URL=postgres://user:password@host/db?sslmode=require
 FRONTEND_URL=http://localhost:3000
+# DB_SYNCHRONIZE=false   # disable auto schema sync once the schema is stable
 ```
 
 ### Run tests
@@ -80,7 +81,7 @@ Default categories seeded on first run: `Work`, `Personal`, `Shopping`, `Health`
 docker-compose up backend
 ```
 
-Data is persisted in a named Docker volume (`sqlite_data`).
+The database lives in Neon, so no volume is needed — set `DATABASE_URL` on the container.
 
 ### Deploy to Railway
 
@@ -88,9 +89,9 @@ Data is persisted in a named Docker volume (`sqlite_data`).
 2. Login (interactive browser auth — run this yourself): `railway login`
 3. Init project: `railway init`
 4. Deploy: `cd backend && railway up`
-5. In the Railway dashboard:
-   - Add a **Volume** and mount it at `/data`
-   - Set env vars: `DATABASE_PATH=/data/db.sqlite`, `FRONTEND_URL=<your-vercel-url>`
+5. In the Railway dashboard, set env vars:
+   - `DATABASE_URL=<your-neon-pooled-connection-string>`
+   - `FRONTEND_URL=<your-vercel-url>`
 6. Live API URL: *(paste Railway URL here after deploy)*
 
 ---

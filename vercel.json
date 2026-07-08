@@ -7,8 +7,7 @@
         "backend": {
             "root": "backend",
             "framework": "nestjs",
-            "buildCommand": "pnpm build",
-            "entrypoint": "dist/main.js"
+            "entrypoint": "src/main.ts"
         }
     },
     "rewrites": [

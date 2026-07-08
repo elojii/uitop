@@ -16,6 +16,9 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200,
   });
+  // Vercel routes `/api/*` to this service without stripping the prefix,
+  // so Nest must mount its controllers under the same prefix.
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }),
   );

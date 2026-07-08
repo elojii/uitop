@@ -10,4 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Mirrors the production `/api` -> backend service rewrite, so the same
+    // relative baseURL works in dev without a VITE_API_URL override.
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
+  },
 })
